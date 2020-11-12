@@ -1,0 +1,67 @@
+#!/usr/bin/env ansible-playbook
+---
+# This playbook serves as a wrapper for all the functionality contained in the ansible roles
+# It uses ansible tags to toggle on/off functionality
+# The "never" tag is used to force the user to be explicit about what they want to do
+#
+# In addition to using tags to control everything the ability to toggle on/off
+# functionality within the roles is controlled through providing
+# -e <action>=true flags. For example: -e apply=true, -e print=true, -e teardown=true
+- name: Administer OCP
+  hosts: localhost
+  become: false
+  gather_facts: false
+  module_defaults:
+    group/k8s:
+      host: https://api.ocp4-6.home.lab:6443
+  vars_files:
+    - vault.yml
+  vars_prompt:
+  - name: playbook_continue
+    prompt: "You are performing a(n)
+              {% if teardown | default(false) %}\e[91mteardown\e[0m
+              {% elif apply | default(false) %}\e[35mapply\e[0m
+              {% else %}\e[97mdefault\e[0m{% endif %}
+            operation.\n
+            Tags: \e[96m{{ ansible_run_tags | join(', ') }}\e[0m\n
+            \n
+            Continue (yes/no)?"
+  tasks:
+  # End play if "yes" was not received during continue prompt
+  # This helps prevent us from doing something stupid somewhere we don't expect
+  - meta: end_play
+    when: not (playbook_continue | bool | default(false))
+    tags:
+    - always
+
+  - block:
+      - name: Login
+        k8s_auth:
+          username: kubeadmin
+          password: "{{ pass }}"
+          validate_certs: no
+        register: k8s_auth_results
+        tags:
+          - never
+          - openshift_get_pods
+
+      - name: Deploy get pods
+        import_role:
+          name: openshift_get_pods
+        tags:
+          - never
+          - openshift_get_pods
+
+    always:
+      # Putting this in an always block ensures the sensitive information is always removed
+      # The tags on this should include all configuration roles
+      # Make sure to add new ones if more roles are added
+    - name: If login succeded try to log out
+      when: k8s_auth_results.k8s_auth.api_key is defined
+      k8s_auth:
+        state: absent
+        api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+        validate_certs: no
+      tags:
+        - never
+        - openshift_get_pods
