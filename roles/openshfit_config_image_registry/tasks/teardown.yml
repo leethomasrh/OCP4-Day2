@@ -1,0 +1,30 @@
+- fail:
+    msg: "Make sure we've authenticated to the cluster before running this role"
+  when: k8s_auth_results.k8s_auth.api_key is not defined
+
+- name: get config for imageregistry
+  k8s_info:
+    api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    api_version: imageregistry.operator.openshift.io/v1
+    kind: Config
+    name: cluster
+  register: reg_imagecfg
+
+- name: Configure emptyDir storage for Image Registry
+  shell: >-
+    oc patch configs.imageregistry.operator.openshift.io/cluster
+    --type merge
+    --patch='{"spec":{"storage":{"emptyDir":{}}}}'
+    --token {{ k8s_auth_results.k8s_auth.api_key }}
+  when:
+    - image_regitry_emptydir | bool
+    - reg_imagecfg['resources'][0]['spec']['storage']['emptyDir'] is defined
+
+- name: Change image registry ManagementState
+  shell: >-
+    oc patch configs.imageregistry.operator.openshift.io/cluster
+    --type merge
+    --patch='{"spec":{"managementState":"Removed"}}}'
+    --token {{ k8s_auth_results.k8s_auth.api_key }}
+  when:
+    - reg_imagecfg['resources'][0]['spec']['managementState'] == "Managed"
