@@ -8,8 +8,13 @@ Do not commit an unencrypted vault.yml file to Github.  The example-vault.yml fi
 is just an example and should not be filled in.
 
 To run the playbooks:
-./test.yml --ask-vault-pass -t {role name}
+./test.yml --ask-vault-pass -t {role name} -e {action}=true
 
-For example to configure ldap authentication:
-./test.yml --ask-vault-pass -t openshift_config_ldap
+Example:
+Configure ldap authentication:
+./test.yml --ask-vault-pass -t openshift_config_ldap -e apply=true
+
+Teardown ldap authentication:
+./test.yml --ask-vault-pass -t openshift_config_ldap -e teardown=true
+
 

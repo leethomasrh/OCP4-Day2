@@ -46,7 +46,7 @@
            get
            clusterserviceversion
            --all-namespaces
-           --config {{ openshift_tmp_kubeconfig_path }}
+          --token {{ k8s_auth_results.k8s_auth.api_key }}
            -o go-template='{{ go_template }}'"
     register: csvs
     changed_when: false

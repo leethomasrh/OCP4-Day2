@@ -8,12 +8,16 @@
     kind: Pod
     validate_certs: no
   register: pod_list
-  tags:
-    - never
-    - openshift_get_pods
 
-- debug:
+- name: print pod list
+  debug:
     var: pod_list
-  tags:
-    - never
-    - openshift_get_pods
+
+- name: Get cluster operators
+  shell: "oc get co
+          --token {{ k8s_auth_results.k8s_auth.api_key }}"
+  register: co_list
+
+- name: print cluster operators
+  debug:
+    var: co_list

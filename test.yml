@@ -16,7 +16,7 @@
       host: https://api.ocp4-6.home.lab:6443
   vars_files:
     - vars.yml
-    - example-vault.yml
+    - vault.yml
   vars_prompt:
   - name: playbook_continue
     prompt: "You are performing a(n)
@@ -45,6 +45,10 @@
         tags:
           - never
           - openshift_get_pods
+          - openshift_config_chronyd
+          - oepnshift_config_ldap
+          - openshift_config_logging
+          - openshift_config_object_prune
 
       - name: Deploy get pods
         import_role:
@@ -52,6 +56,34 @@
         tags:
           - never
           - openshift_get_pods
+
+      - name: configure chronyd
+        import_role:
+          name: openshift_config_chronyd
+        tags:
+          - never
+          - openshift_config_chronyd
+
+      - name: configure ldap
+        import_role:
+          name: openshift_config_ldap
+        tags:
+          - never
+          - openshift_config_ldap
+
+      - name: configure logging
+        import_role:
+          name: openshift_config_logging
+        tags:
+          - never
+          - openshift_config_logging
+
+      - name: configure object pruning
+        import_role:
+          name: openshift_config_object_prune
+        tags:
+          - never
+          - openshift_config_object_prune
 
     always:
       # Putting this in an always block ensures the sensitive information is always removed
@@ -66,3 +98,9 @@
       tags:
         - never
         - openshift_get_pods
+          - never
+          - openshift_get_pods
+          - openshift_config_chronyd
+          - oepnshift_config_ldap
+          - openshift_config_logging
+          - openshift_config_object_prune

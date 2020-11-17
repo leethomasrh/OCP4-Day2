@@ -35,7 +35,7 @@
             crd
             clusterloggings.logging.openshift.io
             -n openshift-logging
-            --config {{ openshift_tmp_kubeconfig_path }}"
+            --token {{ k8s_auth_results.k8s_auth.api_key }}"
   register: crds
   retries: 10
   until: '"clusterloggings.logging.openshift.io" in crds.stdout'
