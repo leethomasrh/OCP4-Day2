@@ -15,7 +15,8 @@
     group/k8s:
       host: https://api.ocp4-6.home.lab:6443
   vars_files:
-    - vault.yml
+    - vars.yml
+    - example-vault.yml
   vars_prompt:
   - name: playbook_continue
     prompt: "You are performing a(n)

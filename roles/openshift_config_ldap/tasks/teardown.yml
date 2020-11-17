@@ -1,0 +1,53 @@
+- fail:
+    msg: "Make sure we've authenticated to the cluster before running this role"
+  when: k8s_auth_results.k8s_auth.api_key is not defined
+
+- name: Teardown group permissions objects
+  k8s:
+    api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    resource_definition: "{{ lookup('template', 'ldap-role-bindings.yml.j2') }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+    state: absent
+
+- name: Teardown group sync objects
+  k8s:
+    api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    resource_definition: "{{ lookup('template', 'ldap-group-sync.yml.j2') }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+    state: absent
+
+# Additional template brackets needed to escape go template syntax - e.g. {{ '{{' }}
+- name: Get current identityProviders
+  shell: "oc
+          get
+          oauth/cluster
+          --config {{ openshift_tmp_kubeconfig_path }}
+          --template='{{ '{{' }} .spec.identityProviders {{ '}}' }}'
+          -o go-template"
+  changed_when: false
+  register: get_out
+
+# http://jsonpatch.com/#replace
+- shell: "oc
+          patch
+          oauth/cluster
+          --config {{ openshift_tmp_kubeconfig_path }}
+          -p '[ { \"op\": \"remove\", \"path\": \"/spec/identityProviders\" } ]'
+          --type=json"
+  register: patch_out
+  changed_when: "'no change' not in patch_out.stdout"
+  when: get_out.stdout != '[]'
+
+- shell: "oc
+          patch
+          oauth/cluster
+          --config {{ openshift_tmp_kubeconfig_path }}
+          -p '[ { \"op\": \"add\", \"path\": \"/spec/identityProviders\", \"value\": [] } ]'
+          --type=json"
+  register: patch_out
+  changed_when: "'no change' not in patch_out.stdout"
+  when: get_out.stdout != '[]'

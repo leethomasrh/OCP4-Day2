@@ -1,0 +1,50 @@
+- fail:
+    msg: "Make sure we've authenticated to the cluster before running this role"
+  when: k8s_auth_results.k8s_auth.api_key is not defined
+
+- name: Create elasticsearch operator namespace
+  k8s:
+    api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    name: openshift-operators-redhat
+    api_version: v1
+    kind: Namespace
+
+- name: Create openshift-logging namespace
+  k8s:
+    api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    resource_definition:
+      apiVersion: v1
+      kind: Project
+      metadata:
+        annotations:
+          # Set the default selector so fluentd can be scheduled on all hosts
+          # The other components get their labels specifically
+          openshift.io/node-selector: kubernetes.io/os=linux
+        name: openshift-logging
+
+- name: Create operatorgroup and subscription
+  k8s:
+    api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    state: present
+    resource_definition: "{{ lookup('template', 'operatorgroup.j2') }}"
+    validate_certs: no
+
+- name: Ensure ClusterLogging crd exists before using it
+  command: "oc
+            get
+            crd
+            clusterloggings.logging.openshift.io
+            -n openshift-logging
+            --config {{ openshift_tmp_kubeconfig_path }}"
+  register: crds
+  retries: 10
+  until: '"clusterloggings.logging.openshift.io" in crds.stdout'
+  changed_when: false
+
+- name: Create clusterlogging custom resource definition
+  k8s:
+    api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    state: present
+    resource_definition: "{{ lookup('template', 'clusterlogging-crd.yaml.j2') }}"
+    validate_certs: no
+
