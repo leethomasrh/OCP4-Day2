@@ -2,7 +2,6 @@
     msg: "Make sure we've authenticated to the cluster before running this role"
   when: k8s_auth_results.k8s_auth.api_key is not defined
 
----
 # Prepare Image Registry
 
 - name: get config for imageregistry
