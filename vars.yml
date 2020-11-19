@@ -23,7 +23,7 @@ logging_subscription_channel:
 etcd_backup_namespace: "openshift-cluster-ops"
 etcd_backup_username: "etcd-backup-user"
 etcd_backup_user: "system:serviceaccount:{{ etcd_backup_namespace }}:{{ etcd_backup_username }}"
-etcd_cluster_id: "demo"
+etcd_cluster_id: "homelab"
 etcd_backup_pvc_claim: "{{ etcd_cluster_id }}-etcd-backup"
 etcd_backup_volume_size: "10Gi"
 etcd_backup_configmap: "etcd-backup-scripts"
@@ -34,3 +34,7 @@ etcd_backup_configmap: "etcd-backup-scripts"
 #Image Registry
 image_registry_size: 100Gi
 image_regitry_emptydir: false
+
+#Prune objects
+openshift_cluster_name: ocp4-6
+openshift_base_domain: home.lab

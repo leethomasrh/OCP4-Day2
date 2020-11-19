@@ -7,9 +7,7 @@
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
     state: present
     resource_definition: "{{ lookup('file', 'default-project-template.yml') }}"
-    validate:
-      fail_on_error: yes
-      strict: yes
+    validate_certs: no
 
 - name: patch cluster to use new template
   shell: >-

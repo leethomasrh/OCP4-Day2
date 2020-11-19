@@ -4,13 +4,12 @@
 
 # Prepare Image Registry
 
-- name: get config for imageregistry
-  k8s_info:
+- name: Create PVC for image registry
+  k8s:
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
-    api_version: imageregistry.operator.openshift.io/v1
-    kind: Config
-    name: cluster
-  register: reg_imagecfg
+    state: present
+    validate_certs: no
+    definition: "{{ lookup('file', 'image-registry-pvc.yml') }}"
 
 # Configure PVC storage provided the variable image_registry_emptydir variable
 # is false.
@@ -22,8 +21,6 @@
         --type json
         --patch='[{"op":"remove","path":"/spec/storage/emptyDir"}]'
         --token {{ k8s_auth_results.k8s_auth.api_key }}
-      when:
-        - reg_imagecfg['resources'][0]['spec']['storage']['emptyDir'] is defined
 
     - name: Assign pvc to image registry if it is not already assigned
       shell: >-
@@ -31,26 +28,10 @@
         --type merge
         --patch='{"spec":{"storage":{"pvc":{"claim":""}}}}'
         --token {{ k8s_auth_results.k8s_auth.api_key }}
-      when:
-        - reg_imagecfg['resources'][0]['spec']['storage']['pvc'] is not defined
-  when:
-    - not image_regitry_emptydir | bool
-
-- name: Configure emptyDir storage for Image Registry
-  shell: >-
-    oc patch configs.imageregistry.operator.openshift.io/cluster
-    --type merge
-    --patch='{"spec":{"storage":{"emptyDir":{}}}}'
-    --token {{ k8s_auth_results.k8s_auth.api_key }}
-  when:
-    - image_regitry_emptydir | bool
-    - reg_imagecfg['resources'][0]['spec']['storage']['emptyDir'] is defined
 
 - name: Change image registry ManagementState
   shell: >-
     oc patch configs.imageregistry.operator.openshift.io/cluster
     --type merge
-    --patch='{"spec":{"managementState":"Managed"}}}'
+    --patch='{"spec":{"managementState":"Managed"}}'
     --token {{ k8s_auth_results.k8s_auth.api_key }}
-  when:
-    - reg_imagecfg['resources'][0]['spec']['managementState'] == "Removed"

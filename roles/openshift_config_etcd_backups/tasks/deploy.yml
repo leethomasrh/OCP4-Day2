@@ -6,6 +6,7 @@
   k8s:
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
     state: present
+    validate_certs: no
     definition: "{{ lookup('template', 'namespace.yaml.j2') }}"
 
 - include_tasks: serviceaccount.yml
@@ -20,10 +21,12 @@
   k8s:
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
     state: present
+    validate_certs: no
     definition: "{{ lookup('template', 'configmap.yaml.j2') }}"
 
 - name: Create CronJob
   k8s:
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
     state: present
+    validate_certs: no
     definition: "{{ lookup('template', 'cronjob.yaml.j2') }}"

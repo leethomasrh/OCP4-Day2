@@ -6,18 +6,14 @@
   k8s:
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
     resource_definition: "{{ lookup('template', 'ldap-role-bindings.yml.j2') }}"
-    validate:
-      fail_on_error: yes
-      strict: yes
+    validate_certs: no
     state: absent
 
 - name: Teardown group sync objects
   k8s:
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
     resource_definition: "{{ lookup('template', 'ldap-group-sync.yml.j2') }}"
-    validate:
-      fail_on_error: yes
-      strict: yes
+    validate_certs: no
     state: absent
 
 # Additional template brackets needed to escape go template syntax - e.g. {{ '{{' }}

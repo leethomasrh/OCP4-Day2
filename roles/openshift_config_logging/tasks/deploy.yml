@@ -8,13 +8,15 @@
     name: openshift-operators-redhat
     api_version: v1
     kind: Namespace
+    validate_certs: no
 
 - name: Create openshift-logging namespace
   k8s:
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    validate_certs: no
     resource_definition:
       apiVersion: v1
-      kind: Project
+      kind: Namespace
       metadata:
         annotations:
           # Set the default selector so fluentd can be scheduled on all hosts
@@ -26,7 +28,7 @@
   k8s:
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
     state: present
-    resource_definition: "{{ lookup('template', 'operatorgroup.j2') }}"
+    resource_definition: "{{ lookup('template', 'operatorgroup.yaml.j2') }}"
     validate_certs: no
 
 - name: Ensure ClusterLogging crd exists before using it

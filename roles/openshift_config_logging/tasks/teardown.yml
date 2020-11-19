@@ -15,7 +15,7 @@
     k8s:
       api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
       state: absent
-      resource_definition: "{{ lookup('template', 'operatorgroup.j2') }}"
+      resource_definition: "{{ lookup('template', 'operatorgroup.yaml.j2') }}"
       validate_certs: no
 
   - name: Remove elastic search operator namespace
@@ -25,6 +25,7 @@
       api_version: v1
       kind: Namespace
       state: absent
+      validate_certs: no
 
   - name: Remove elastic search namespace
     k8s:
@@ -33,6 +34,7 @@
       api_version: v1
       kind: Namespace
       state: absent
+      validate_certs: no
 
   - name: Pause while logging objects are deleted
     pause:
@@ -55,6 +57,7 @@
     k8s:
       api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
       state: absent
+      validate_certs: no
       resource_definition:
         apiVersion: operators.coreos.com/v1alpha1
         kind: ClusterServiceVersion

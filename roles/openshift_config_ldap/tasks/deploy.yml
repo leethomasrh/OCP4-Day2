@@ -11,6 +11,7 @@
       metadata:
         name: cluster-ops
     state: present
+    validate_certs: no
   register: create_project
 
 - name: Deploy ldap oauth configuration
@@ -18,27 +19,21 @@
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
     apply: yes
     resource_definition: "{{ lookup('template', 'ldap-oauth-config.yml.j2') }}"
-    validate:
-      fail_on_error: yes
-      strict: yes
+    validate_certs: no
 
 - name: Deploy group sync objects
   k8s:
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
     apply: yes
+    validate_certs: no
     resource_definition: "{{ lookup('template', 'ldap-group-sync.yml.j2') }}"
-    validate:
-      fail_on_error: yes
-      strict: yes
 
 - name: Deploy group permissions objects
   k8s:
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
     apply: yes
     resource_definition: "{{ lookup('template', 'ldap-role-bindings.yml.j2') }}"
-    validate:
-      fail_on_error: yes
-      strict: yes
+    validate_certs: no
 
 - name: Remove default self-provisioners clusterrolebinding for system:oauth users
   k8s:
@@ -49,3 +44,4 @@
       metadata:
         name: self-provisioners
     state: absent
+    validate_certs: no

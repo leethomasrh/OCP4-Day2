@@ -51,6 +51,7 @@
           - openshift_config_object_prune
           - openshift_config_image_registry
           - openshift_config_etcd_backups
+          - openshift_default_project_template
 
       - name: Deploy get pods
         import_role:
@@ -101,6 +102,13 @@
           - never
           - openshift_config_etcd_backups
 
+      - name: manage project template
+        import_role:
+          name: openshift_default_project_template
+        tags:
+          - never
+          - openshift_default_project_template
+
     always:
       # Putting this in an always block ensures the sensitive information is always removed
       # The tags on this should include all configuration roles
@@ -122,3 +130,4 @@
           - openshift_config_object_prune
           - openshift_config_image_registry
           - openshift_config_etcd_backups
+          - openshift_default_project_template
