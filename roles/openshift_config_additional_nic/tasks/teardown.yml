@@ -1,0 +1,42 @@
+- fail:
+    msg: "Make sure we've authenticated to the cluster before running this role"
+  when: k8s_auth_results.k8s_auth.api_key is not defined
+
+- name: Teardown worker machineconfig
+  k8s:
+    api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    validate_certs: no
+    resource_definition:
+      apiVersion: machineconfiguration.openshift.io/v1
+      kind: MachineConfig
+      metadata:
+        name: "{{ additional_nic_machineconfig_name }}"
+        labels:
+          machineconfiguration.openshift.io/role: worker
+      spec:
+        osImageURL: ""
+        config:
+          ignition:
+            config: {}
+            timeouts: {}
+            version: "{{ additional_nic_ignition_version }}"
+          networkd: {}
+          systemd: {}
+          storage:
+            files:
+            - contents:
+                source: "data:,{{ lookup('template', 'ifconfig-worker1.j2') | urlencode }}"
+              filesystem: root
+              mode: 420
+              path: /etc/sysconfig/network-scripts/ifcfg-worker1-sn
+            - contents:
+                source: "data:,{{ lookup('template', 'ifconfig-worker2.j2') | urlencode }}"
+              filesystem: root
+              mode: 420
+              path: /etc/sysconfig/network-scripts/ifcfg-worker2-sn
+            - contents:
+                source: "data:,{{ lookup('template', 'ifconfig-worker3.j2') | urlencode }}"
+              filesystem: root
+              mode: 420
+              path: /etc/sysconfig/network-scripts/ifcfg-worker3-sn
+    state: absent

@@ -1,0 +1,13 @@
+[connection]
+type={{ additional_nic_type }}
+id='Storage Network'
+interface-name={{ additional_nic_device }}
+
+[ethernet]
+mac-address={{ additional_nic_mac_worker2 }}
+
+[ipv4]
+method=manual
+addresses={{ additional_nic_ip_worker2 }}/24
+dns={{ additional_nic_dns }}
+gateway={{ additional_nic_gw }}

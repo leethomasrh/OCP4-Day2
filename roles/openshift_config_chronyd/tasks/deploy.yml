@@ -5,6 +5,7 @@
 - name: Create master machineconfig
   k8s:
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    validate_certs: no
     resource_definition:
       apiVersion: machineconfiguration.openshift.io/v1
       kind: MachineConfig
@@ -32,6 +33,7 @@
 - name: Create worker machineconfig
   k8s:
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    validate_certs: no
     resource_definition:
       apiVersion: machineconfiguration.openshift.io/v1
       kind: MachineConfig
