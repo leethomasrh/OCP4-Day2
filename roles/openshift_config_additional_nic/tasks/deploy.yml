@@ -17,30 +17,29 @@
         osImageURL: ""
         config:
           ignition:
-            config: {}
-            timeouts: {}
+            config:
+            timeouts:
             version: "{{ additional_nic_ignition_version }}"
-          networkd: {}
-          systemd: {}
+          networkd:
+          systemd:
           storage:
             files:
             - contents:
-                source: "data:,{{ lookup('template', 'ifconfig-worker1.j2') | urlencode }}"
-                verification: {}
+                source: "data:text/plain;charset=utf-8;base64,{{ lookup('template', 'ifconfig-worker1.j2') | b64encode }}"
+                verification:
               filesystem: root
               mode: 420
-              path: /etc/sysconfig/network-scripts/ifcfg-worker1-sn
+              path: /etc/sysconfig/network-scripts/ifcfg-ocp4-6-dwnrh-worker-bl2fh-ens224
             - contents:
-                source: "data:,{{ lookup('template', 'ifconfig-worker2.j2') | urlencode }}"
-                verification: {}
+                source: "data:text/plain;charset=utf-8;base64,{{ lookup('template', 'ifconfig-worker2.j2') | b64encode }}"
+                verification:
               filesystem: root
               mode: 420
-#              path: /etc/sysconfig/network-scripts/ifcfg-worker2-sn
-              path: /etc/NetworkManager/system-connections/ens224.nmconnection
+              path: /etc/sysconfig/network-scripts/ifcfg-ocp4-6-dwnrh-worker-kbp754-ens224
             - contents:
-                source: "data:,{{ lookup('template', 'ifconfig-worker3.j2') | urlencode }}"
-                verification: {}
+                source: "data:text/plain;charset=utf-8;base64,{{ lookup('template', 'ifconfig-worker3.j2') | b64encode }}"
+                verification:
               filesystem: root
               mode: 420
-              path: /etc/sysconfig/network-scripts/ifcfg-worker3-sn
+              path: /etc/sysconfig/network-scripts/ifcfg-ocp4-6-dwnrh-worker-vxsp6-ens224
     state: present

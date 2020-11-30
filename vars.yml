@@ -42,10 +42,10 @@ openshift_base_domain: home.lab
 #Additional Nics
 additional_nic_ignition_version: 3.1.0
 additional_nic_machineconfig_name: 99-worker-additional-nic-config
-additional_nic_device: ens161
-additional_nic_mac_worker1: 00:50:56:bd:2b:d7
-additional_nic_mac_worker2: 00:50:56:bd:ee:5c
-additional_nic_mac_worker3: 00:50:56:bd:8b:37
+additional_nic_device: ens224
+additional_nic_mac_worker1: 00:50:56:bd:0f:e1
+additional_nic_mac_worker2: 00:50:56:bd:50:a1
+additional_nic_mac_worker3: 00:50:56:bd:68:17
 additional_nic_type: Ethernet
 additional_nic_bootprotocol: none
 additional_nic_ip_worker1: 10.0.99.183
