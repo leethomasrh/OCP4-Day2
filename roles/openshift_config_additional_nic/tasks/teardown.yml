@@ -29,17 +29,17 @@
                 verification:
               filesystem: root
               mode: 420
-              path: /etc/sysconfig/network-scripts/ifcfg-ocp4-6-dwnrh-worker-bl2fh-ens224
+              path: /etc/sysconfig/network-scripts/ifcfg-ocp4-6-bcn9p-worker-fjhdc-ens224
             - contents:
                 source: "data:text/plain;charset=utf-8;base64,{{ lookup('template', 'ifconfig-worker2.j2') | b64encode }}"
                 verification:
               filesystem: root
               mode: 420
-              path: /etc/sysconfig/network-scripts/ifcfg-ocp4-6-dwnrh-worker-kbp754-ens224
+              path: /etc/sysconfig/network-scripts/ifcfg-ocp4-6-bcn9p-worker-jbzvp-ens224
             - contents:
                 source: "data:text/plain;charset=utf-8;base64,{{ lookup('template', 'ifconfig-worker3.j2') | b64encode }}"
                 verification:
               filesystem: root
               mode: 420
-              path: /etc/sysconfig/network-scripts/ifcfg-ocp4-6-dwnrh-worker-vxsp6-ens224
+              path: /etc/sysconfig/network-scripts/ifcfg-ocp4-6-bcn9p-worker-xz68d-ens224
     state: absent

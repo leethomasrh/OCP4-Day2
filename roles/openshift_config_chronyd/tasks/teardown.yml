@@ -27,6 +27,7 @@
                 source: "data:,{{ lookup('template', 'chrony.conf.j2') | urlencode }}"
               filesystem: root
               mode: 420
+              overwrite: true
               path: /etc/chrony.conf
     state: absent
 
@@ -55,5 +56,6 @@
                 source: "data:,{{ lookup('template', 'chrony.conf.j2') | urlencode }}"
               filesystem: root
               mode: 420
+              overwrite: true
               path: /etc/chrony.conf
     state: absent
