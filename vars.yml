@@ -1,3 +1,7 @@
+#General variables
+openshift_cluster_name: ocp4-6
+openshift_base_domain: home.lab
+
 #NTP
 rhcos_ntp_servers:
 - <insert server>
@@ -27,6 +31,7 @@ etcd_cluster_id: "homelab"
 etcd_backup_pvc_claim: "{{ etcd_cluster_id }}-etcd-backup"
 etcd_backup_volume_size: "10Gi"
 etcd_backup_configmap: "etcd-backup-scripts"
+etcd_backup_daysToKeepBackups: 30
 
 # Just documeting the variable. We set the variable using the set_fact module
 # etcd_image: "quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:3c5301e86aa93d36d936cd5bd6b3575c98c4d33205be38c6dcbe09774b95ca7a"
@@ -36,8 +41,7 @@ image_registry_size: 100Gi
 image_regitry_emptydir: false
 
 #Prune objects
-openshift_cluster_name: ocp4-6
-openshift_base_domain: home.lab
+
 
 #Additional Nics
 additional_nic_ignition_version: 3.1.0
