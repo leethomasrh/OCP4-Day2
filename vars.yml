@@ -9,15 +9,10 @@ rhcos_ntp_servers:
 
 #LDAP
 ldap_url:
-
 ldap_bind_dn:
-
 ldap_group_sync_whitelist:
-
 ldap_cluster_admins_group:
-
 ldap_cluster_reader_group:
-
 ldap_self_provisioners_group:
 
 #Logging
@@ -39,9 +34,6 @@ etcd_backup_daysToKeepBackups: 30
 #Image Registry
 image_registry_size: 100Gi
 image_regitry_emptydir: false
-
-#Prune objects
-
 
 #Additional Nics
 additional_nic_ignition_version: 3.1.0
