@@ -52,6 +52,8 @@ additional_nic_ip_worker1: 10.0.99.183
 additional_nic_ip_worker2: 10.0.99.184
 additional_nic_ip_worker3: 10.0.99.185
 additional_nic_subnetmask: 24
-additional_nic_dns: 10.0.99.20
 additional_nic_onboot: "yes"
-additional_nic_gw: 10.0.99.2
+additional_nic_path: /etc/sysconfig/network-scripts/
+additional_nic_worker1_filename: ifcfg-esp01-mk6tm-worker-5vbtk-ens224
+additional_nic_worker2_filename: ifcfg-esp01-mk6tm-worker-c5wmk-ens224
+additional_nic_worker3_filename: ifcfg-esp01-mk6tm-worker-jznbm-ens224
