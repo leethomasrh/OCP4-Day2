@@ -14,6 +14,14 @@
     validate_certs: no
   register: create_project
 
+- name: Create whitelist configmap
+  shell: "oc
+          create
+          configmap ldap-group-sync-whitelist
+          --from-file=ldap-group-sync-whitelist.txt=/esoocp/sacesp01/AD/whitelist.txt
+          -n cluster-ops
+          --token {{ k8s_auth_results.k8s_auth.api_key }}"
+
 - name: Deploy ldap oauth configuration
   k8s:
     api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
