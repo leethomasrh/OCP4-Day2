@@ -46,6 +46,14 @@ items:
         defaultRequest:
           cpu: 100m
           memory: 128Mi
+  - apiVersion: v1
+    kind: ResourceQuota
+    metadata:
+      name: default-quota
+    spec:
+      hard:
+        limits.cpu: '2'
+        limits.memory: 4Gi
   - apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:

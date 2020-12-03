@@ -1,0 +1,57 @@
+- fail:
+    msg: "Make sure we've authenticated to the cluster before running this role"
+  when: k8s_auth_results.k8s_auth.api_key is not defined
+
+- name: Create master machineconfig
+  k8s:
+    api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    resource_definition:
+      apiVersion: machineconfiguration.openshift.io/v1
+      kind: MachineConfig
+      metadata:
+        name: 05-master-chrony-conf
+        labels:
+          machineconfiguration.openshift.io/role: master
+      spec:
+        config:
+          ignition:
+            config: {}
+            security:
+              tls: {}
+            timeouts: {}
+            version: 2.2.0
+          storage:
+            files:
+            - contents:
+                source: "data:,{{ lookup('template', 'chrony.conf.j2') | urlencode }}"
+              filesystem: root
+              mode: 420
+              path: /etc/chrony.conf
+    state: present
+
+- name: Create worker machineconfig
+  k8s:
+    api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+    resource_definition:
+      apiVersion: machineconfiguration.openshift.io/v1
+      kind: MachineConfig
+      metadata:
+        name: 05-worker-chrony-conf
+        labels:
+          machineconfiguration.openshift.io/role: worker
+      spec:
+        config:
+          ignition:
+            config: {}
+            security:
+              tls: {}
+            timeouts: {}
+            version: 2.2.0
+          storage:
+            files:
+            - contents:
+                source: "data:,{{ lookup('template', 'chrony.conf.j2') | urlencode }}"
+              filesystem: root
+              mode: 420
+              path: /etc/chrony.conf
+    state: present
