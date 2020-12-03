@@ -5,23 +5,23 @@ metadata:
   namespace: openshift-monitoring
 data:
   config.yaml: |
-    enableUserWorkload: "{{ enable_user_namespace_monitoring }}""
+    enableUserWorkload: {{ enable_user_namespace_monitoring }}
     prometheusK8s:
-      retention: "{{ monitoring_retention_period }}"
+      retention: {{ monitoring_retention_period }}
       volumeClaimTemplate:
         metadata:
-          name: prometheusdb
+          name: {{ monitoring_pvc_name }}
         spec:
-          storageClassName: "{{ monitoring_storage_class }}"
+          storageClassName: {{ monitoring_storage_class }}
           resources:
             requests:
-              storage: "{{ monitoring_storage_size }}"
+              storage: {{ monitoring_storage_size }}
     alertmanagerMain:
       volumeClaimTemplate:
         metadata:
-          name: alertmanager
+          name: {{ alerting_pvc_name }}
         spec:
-          storageClassName: "{{ monitoring_storage_class }}"
+          storageClassName: {{ monitoring_storage_class }}
           resources:
             requests:
-              storage: "{{ alerting_storage_size }}"
+              storage: {{ alerting_storage_size }}

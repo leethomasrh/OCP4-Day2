@@ -55,6 +55,8 @@ additional_nic_gw: 10.0.99.2
 #Monitoring
 enable_user_namespace_monitoring: true
 monitoring_retention_period: 1w
+monitoring_pvc_name: prometheusdb
 monitoring_storage_class: thin
 monitoring_storage_size: 40Gi
+alerting_pvc_name: alertmanager
 alerting_storage_size: 10Gi
