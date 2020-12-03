@@ -16,7 +16,7 @@ ldap_cluster_reader_group:
 ldap_self_provisioners_group:
 
 #Logging
-logging_subscription_channel:
+logging_subscription_channel: 4.6
 
 #etcd backups
 etcd_backup_namespace: "openshift-cluster-ops"
