@@ -14,7 +14,8 @@ items:
       url: "{{ ldap_url }}"
       insecure: true
       bindDN: "{{ ldap_bind_dn }}"
-      bindPassword: "{{ ldap_bind_password }}"
+      bindPassword: 
+        name: ldap-secret
       augmentedActiveDirectory:
         groupsQuery:
           derefAliases: never
